@@ -2,12 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>com.vinaacademy</groupId>
     <artifactId>common-library</artifactId>
     <version>${revision}</version>
     <name>common-library</name>
     <description>Shared library for microservices</description>
 
     <properties>
+        <revision>1.0.0</revision>
         <java.version>17</java.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
     </properties>
