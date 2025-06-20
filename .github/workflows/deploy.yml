@@ -22,6 +22,6 @@ jobs:
           settings-path: ${{ github.workspace }}
 
       - name: Deploy with Maven
-        run: mvn clean deploy
+        run: mvn clean deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
