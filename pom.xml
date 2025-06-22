@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.github.VinaAcademy</groupId>
         <artifactId>vinaacademy-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modelVersion>4.0.0</modelVersion>
