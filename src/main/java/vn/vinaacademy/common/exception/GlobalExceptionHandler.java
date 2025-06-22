@@ -14,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import vn.vinaacademy.common.response.ApiResponse;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
@@ -43,28 +44,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ApiResponse.error(String.join(", ", errors)));
     }
 
-//    @ExceptionHandler({
-//            UnauthorizedException.class,
-//            AuthenticationException.class,
-//            InternalAuthenticationServiceException.class,
-//            BadCredentialsException.class
-//    })
-//    public ResponseEntity<Object> unauthorizedRequest(Exception e) {
-//        logger.error(e.getMessage(), e.getCause());
-//        String message = e.getCause() instanceof UsernameNotFoundException ?
-//                e.getCause().getMessage() : e.getMessage();
-//
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                .body(ApiResponse.error(message));
-//    }
-//
-//    @ExceptionHandler({AccessDeniedException.class})
-//    public ResponseEntity<Object> accessDenied(AccessDeniedException e) {
-//        logger.error(e.getMessage(), e.getCause());
-//
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                .body(ApiResponse.error(e.getMessage()));
-//    }
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<ApiResponse<Object>> handleSecurityException(SecurityException ex) {
+        logger.error(ex.getMessage(), ex.getCause());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.error("Authentication required"));
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<Object> accessDenied(AccessDeniedException e) {
+        logger.error(e.getMessage(), e.getCause());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error(e.getMessage()));
+    }
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> ex(Exception e) {
