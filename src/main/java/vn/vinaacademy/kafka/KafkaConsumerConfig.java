@@ -18,11 +18,14 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConsumerConfig {
-    @Value("${spring.kafka.bootstrap-servers}")
+    @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
     private String bootstrapServers;
 
     @Value("${spring.kafka.consumer.group-id}")
     private String consumerGroupId;
+
+    @Value("${kafka.listener.concurrency:3}")
+    private int kafkaListenerConcurrency;
 
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
@@ -32,7 +35,7 @@ public class KafkaConsumerConfig {
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class,
                 JsonDeserializer.VALUE_DEFAULT_TYPE, Object.class,
-                JsonDeserializer.TRUSTED_PACKAGES, "*", // Adjust as necessary for your application
+                JsonDeserializer.TRUSTED_PACKAGES, "vn.vinaacademy.kafka.event",
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
                 ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false
         );
@@ -43,7 +46,7 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-        factory.setConcurrency(3); // Set concurrency level
+        factory.setConcurrency(kafkaListenerConcurrency); // Set concurrency level
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;
     }
