@@ -12,8 +12,12 @@ import java.util.Map;
 
 @Configuration
 public class KafkaProducerConfig {
-    @Value("${spring.kafka.bootstrap-servers}")
+    @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
     private String bootstrapServers;
+    @Value("${kafka.producer.linger-ms:10}")
+    private int lingerMs;
+    @Value("${kafka.producer.batch-size:16384}")
+    private int batchSize;
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
@@ -23,8 +27,8 @@ public class KafkaProducerConfig {
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class,
                 ProducerConfig.ACKS_CONFIG, "all",
                 ProducerConfig.RETRIES_CONFIG, 3,
-                ProducerConfig.LINGER_MS_CONFIG, 10,
-                ProducerConfig.BATCH_SIZE_CONFIG, 16384,
+                ProducerConfig.LINGER_MS_CONFIG, lingerMs,
+                ProducerConfig.BATCH_SIZE_CONFIG, batchSize,
                 ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip"
         );
         return new DefaultKafkaProducerFactory<>(configProps);
