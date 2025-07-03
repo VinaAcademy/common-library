@@ -6,10 +6,12 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -20,19 +22,19 @@ public class JacksonConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
 
-        // 👇 Loại bỏ null field khỏi JSON
+        // Loại bỏ null field khỏi JSON
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        // 👇 Tắt timestamp cho date
+        // Tắt timestamp cho date
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        // 👇 Xử lý các field không nhận dạng được
+        // Xử lý các field không nhận dạng được
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-        // 👇 Tự động escape HTML (optional tùy dự án)
+        // Tự động escape HTML (optional tùy dự án)
 //        mapper.getFactory().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
 
-        // 👇 DateTime formatter ISO hoặc custom
+        // DateTime formatter ISO hoặc custom
         JavaTimeModule timeModule = new JavaTimeModule();
         timeModule.addSerializer(LocalDateTime.class,
                 new JsonSerializer<>() {
@@ -43,12 +45,14 @@ public class JacksonConfig {
                         gen.writeString(value.format(formatter));
                     }
                 });
+        // Thêm dòng này để hỗ trợ Instant
+        timeModule.addSerializer(Instant.class, InstantSerializer.INSTANCE);
 
-        // 👇 Optional: Serialize BigDecimal thành String để tránh mất độ chính xác JSON
+        // Optional: Serialize BigDecimal thành String để tránh mất độ chính xác JSON
         SimpleModule bigDecimalModule = new SimpleModule();
         bigDecimalModule.addSerializer(BigDecimal.class, ToStringSerializer.instance);
 
-        // 👇 Optional: Serialize Enum rõ ràng (theo name thay vì ordinal)
+        // Optional: Serialize Enum rõ ràng (theo name thay vì ordinal)
         mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
         mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
 
