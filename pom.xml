@@ -5,12 +5,13 @@
   <parent>
     <groupId>com.github.VinaAcademy</groupId>
     <artifactId>vinaacademy-parent</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <relativePath/>
   </parent>
   <modelVersion>4.0.0</modelVersion>
+  <groupId>vn.vinaacademy</groupId>
   <artifactId>common-library</artifactId>
-  <version>2.0.0</version>
+  <version>2.0.1</version>
   <name>common-library</name>
   <description>Shared library for microservices</description>
 

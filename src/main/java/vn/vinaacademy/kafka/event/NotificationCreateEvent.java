@@ -21,6 +21,7 @@ public class NotificationCreateEvent {
     //    private String hash;  sau update len de hash value valid neu k se bi fake noti
     public enum NotificationType {
         SYSTEM,
+        MESSAGE,
         PAYMENT_SUCCESS,
         COURSE_REVIEW,
         COURSE_APPROVAL,
